@@ -6,4 +6,6 @@
 
 .profile-pic {
   width: 200px;
+  margin-top: 100px;
+  border-radius: 12px;
 }
