@@ -1,17 +1,19 @@
+
 .intro {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
 }
 
-
 .image-container {
-  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* align top of container */
+  position: relative;
+  top: 50px; /* move image down without affecting row */
 }
 
 .profile-pic {
   width: 200px;
   border-radius: 12px;
-  position: relative;
-  top: 50px;
 }
