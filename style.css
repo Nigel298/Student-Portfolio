@@ -12,4 +12,5 @@
 .profile-pic {
   width: 200px;
   border-radius: 12px;
+  position: relative;
 }
