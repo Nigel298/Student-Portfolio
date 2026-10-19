@@ -1,0 +1,71 @@
+
+/*
+  Arduino Self-Watering Plant System
+
+  Components:
+  - Arduino Uno
+  - Soil moisture sensor (analog output)
+  - Relay module
+  - Small DC water pump
+
+  Wiring:
+  Soil moisture sensor AO -> A0
+  Relay signal pin         -> D7
+  Sensor VCC               -> 5V (or as specified)
+  Sensor GND               -> GND
+*/
+
+const int moisturePin = A0;
+const int relayPin = 7;
+
+// Adjust these after testing your sensor
+const int dryThreshold = 650;
+const int wetThreshold = 450;
+
+// Pump timing
+const unsigned long wateringTime = 2000;       // 2 seconds
+const unsigned long checkInterval = 5000;       // Check every 5 seconds
+
+unsigned long lastCheck = 0;
+
+// Most relay modules are active LOW.
+// Change these if your relay works in reverse.
+const int RELAY_ON = LOW;
+const int RELAY_OFF = HIGH;
+
+void setup() {
+  Serial.begin(9600);
+
+  // Keep the pump off during startup
+  digitalWrite(relayPin, RELAY_OFF);
+  pinMode(relayPin, OUTPUT);
+
+  Serial.println("Self-watering system started.");
+}
+
+void loop() {
+  unsigned long currentTime = millis();
+
+  if (currentTime - lastCheck >= checkInterval) {
+    lastCheck = currentTime;
+
+    int moisture = analogRead(moisturePin);
+
+    Serial.print("Soil moisture reading: ");
+    Serial.println(moisture);
+
+    // Higher readings often indicate drier soil,
+    // but check your particular sensor.
+    if (moisture > dryThreshold) {
+      Serial.println("Soil is dry. Watering plant...");
+
+      digitalWrite(relayPin, RELAY_ON);
+      delay(wateringTime);
+      digitalWrite(relayPin, RELAY_OFF);
+
+      Serial.println("Pump stopped.");
+    } else {
+      Serial.println("Soil moisture is sufficient.");
+    }
+  }
+}
